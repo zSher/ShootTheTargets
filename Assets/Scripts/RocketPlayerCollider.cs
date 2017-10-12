@@ -39,15 +39,18 @@ public class RocketPlayerCollider : MonoBehaviour {
             //rb2D.velocity
 
             GameObject enemyPlayer = collision.gameObject;
+            RocketPlayerController rpController = collision.gameObject.GetComponentInParent<RocketPlayerController>();
+            if (rpController.isInvulnerable || rpController.isDead)
+            {
+                return;
+            }
 
             Vector3 direction = enemyPlayer.transform.position - parentTransform.position;
             float angleOfCollision = Vector3.Angle(direction.normalized, parentrb2D.velocity.normalized);
 
             if (angleOfCollision < 90 && parentrb2D.velocity != Vector2.zero)
             {
-
-                RocketPlayerController rpController = collision.gameObject.GetComponentInParent<RocketPlayerController>();
-                rpController.CrashExplode(parentrb2D.velocity.normalized);
+                 rpController.CrashExplode(parentrb2D.velocity.normalized);
             }
         } else if (collision.gameObject.tag == "Target")
         {
