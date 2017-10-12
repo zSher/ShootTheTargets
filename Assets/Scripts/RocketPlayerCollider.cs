@@ -52,7 +52,7 @@ public class RocketPlayerCollider : MonoBehaviour {
             {
                  rpController.CrashExplode(parentrb2D.velocity.normalized);
             }
-        } else if (collision.gameObject.tag == "Target")
+        } else if (collision.gameObject.tag == "Target" && !parentController.isDead)
         {
             //get target's score amount, add to this objects score
             this.parentController.targetPack.Add(collision.gameObject);

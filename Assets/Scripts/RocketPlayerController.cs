@@ -42,6 +42,11 @@ public class RocketPlayerController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            this.CrashExplode(Vector2.one);
+        }
+
         if (grounded)
         {
             rb2D.isKinematic = true;
@@ -144,6 +149,11 @@ public class RocketPlayerController : MonoBehaviour {
 
     public void CrashExplode(Vector2 dirOfExplosion)
     {
+        if (isDead)
+        {
+            return;
+        }
+
         animator.SetTrigger("Die");
         EjectTargets();
 
@@ -179,6 +189,7 @@ public class RocketPlayerController : MonoBehaviour {
         Destroy(rippleRing);
         animator.SetTrigger("Respawn");
         this.isDead = false;
+        this.isInvulnerable = true;
         yield return new WaitForSeconds(2f);
         this.isInvulnerable = false;
 
