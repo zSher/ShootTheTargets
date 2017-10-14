@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using XboxCtrlrInput;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
@@ -22,6 +23,7 @@ public class RocketPlayerController : MonoBehaviour {
 
     public GameObject[] explosionGO;
     public GameObject rippleRingGO;
+    public ScoreSizer scoreSizer;
 
     public Color playerColor = Color.white;
 
@@ -90,6 +92,17 @@ public class RocketPlayerController : MonoBehaviour {
                 Launch();
             }
         }
+    }
+
+    internal void addTarget(GameObject gameObject)
+    {
+        this.targetPack.Add(gameObject);
+        setScore();
+    }
+
+    public void setScore()
+    {
+        this.scoreSizer.SetScoreText(targetPack.Count);
     }
 
     private void Launch()
@@ -167,6 +180,7 @@ public class RocketPlayerController : MonoBehaviour {
         newExplosion.transform.rotation = Quaternion.LookRotation(Vector3.forward, dirOfExplosion);
 
         //stop
+        setScore();
         this.isDead = true;
         rb2D.isKinematic = true;
         grounded = true;

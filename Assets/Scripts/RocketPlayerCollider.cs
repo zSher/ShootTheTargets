@@ -58,7 +58,7 @@ public class RocketPlayerCollider : MonoBehaviour {
             else if (collision.gameObject.tag == "Target")
             {
                 //get target's score amount, add to this objects score
-                this.parentController.targetPack.Add(collision.gameObject);
+                this.parentController.addTarget(collision.gameObject);
                 collision.gameObject.SetActive(false);
             }
             else if (collision.gameObject.tag == "DeadOnTouch")
