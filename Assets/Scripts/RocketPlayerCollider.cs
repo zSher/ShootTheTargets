@@ -24,39 +24,51 @@ public class RocketPlayerCollider : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (!parentController.isDead)
         {
-            if (collision.gameObject.Equals(transform.parent.gameObject))
+            if (collision.gameObject.tag == "Player")
             {
-                //Break if we are colliding against ourselves
-                return;
+                if (collision.gameObject.Equals(transform.parent.gameObject))
+                {
+                    //Break if we are colliding against ourselves
+                    return;
+                }
+                //TODO: check teams blah blah blah
+
+                //Check where we collided with other player, choose which dies based on direction and velocity
+
+                //get the vector of velocity, check it that vector is pointing towards the collision point
+                //rb2D.velocity
+
+                GameObject enemyPlayer = collision.gameObject;
+                RocketPlayerController rpController = collision.gameObject.GetComponentInParent<RocketPlayerController>();
+                if (rpController.isInvulnerable || rpController.isDead)
+                {
+                    return;
+                }
+
+                Vector3 direction = enemyPlayer.transform.position - parentTransform.position;
+                float angleOfCollision = Vector3.Angle(direction.normalized, parentrb2D.velocity.normalized);
+
+                if (angleOfCollision < 90 && parentrb2D.velocity != Vector2.zero)
+                {
+                    rpController.CrashExplode(parentrb2D.velocity.normalized);
+                }
             }
-            //TODO: check teams blah blah blah
-
-            //Check where we collided with other player, choose which dies based on direction and velocity
-
-            //get the vector of velocity, check it that vector is pointing towards the collision point
-            //rb2D.velocity
-
-            GameObject enemyPlayer = collision.gameObject;
-            RocketPlayerController rpController = collision.gameObject.GetComponentInParent<RocketPlayerController>();
-            if (rpController.isInvulnerable || rpController.isDead)
+            else if (collision.gameObject.tag == "Target")
             {
-                return;
+                //get target's score amount, add to this objects score
+                this.parentController.targetPack.Add(collision.gameObject);
+                collision.gameObject.SetActive(false);
             }
-
-            Vector3 direction = enemyPlayer.transform.position - parentTransform.position;
-            float angleOfCollision = Vector3.Angle(direction.normalized, parentrb2D.velocity.normalized);
-
-            if (angleOfCollision < 90 && parentrb2D.velocity != Vector2.zero)
+            else if (collision.gameObject.tag == "DeadOnTouch")
             {
-                 rpController.CrashExplode(parentrb2D.velocity.normalized);
+                if (!parentController.isInvulnerable)
+                {
+                    parentController.CrashExplode(parentrb2D.velocity * -1);
+                }
             }
-        } else if (collision.gameObject.tag == "Target" && !parentController.isDead)
-        {
-            //get target's score amount, add to this objects score
-            this.parentController.targetPack.Add(collision.gameObject);
-            collision.gameObject.SetActive(false);
         }
+       
     }
 }
