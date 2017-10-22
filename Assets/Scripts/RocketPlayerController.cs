@@ -63,6 +63,7 @@ public class RocketPlayerController : MonoBehaviour {
             {
                 rb2D.isKinematic = false;
             }
+            transform.rotation = Quaternion.LookRotation(Vector3.forward, rb2D.velocity.normalized);
         }
     }
 
